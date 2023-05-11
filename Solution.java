@@ -1,36 +1,26 @@
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class Solution {
     public int[] kWeakestRows(int[][] mat, int k) {
-        int[] l = new int[mat.length];
-        Map<Integer,Integer> map = new HashMap<>();
+
+        if (k == 0)return new int[k];
+        Map<Integer, Integer> map = new HashMap<>();
         for (int i = 0; i < mat.length; i++) {
-            int power = 0;
+            int count = 0;
             for (int j = 0; j < mat[i].length; j++) {
-                power += mat[i][j];
+                if (mat[i][j] == 1) count++;
             }
-            map.put(i, power);
-            l[i] = power;
+            map.put(i, count);
         }
 
-        int[] f = new int[k];
-        Arrays.sort(l);
-        l = Arrays.copyOf(l,k);
 
-        for (int i = 0; i < l.length; i++) {
-            for (int j = map.size()-1; j >= 0 ; j--) {
-                if (l[i] == map.get(j)) {
-                    f[i] = j;
-                }
-            }
+        List<Map.Entry<Integer, Integer>> entries = new ArrayList<>(map.entrySet());
+        entries.sort(Map.Entry.comparingByValue());
+
+        int[] sortedValues = new int[entries.size()];
+        for (int i = 0; i < entries.size(); i++) {
+            sortedValues[i] = entries.get(i).getKey();
         }
-
-        throw new RuntimeException(Arrays.toString(l)+map+ Arrays.toString(f));
-
-
-        //return l;
+        return Arrays.copyOf(sortedValues,k);
     }
 }
